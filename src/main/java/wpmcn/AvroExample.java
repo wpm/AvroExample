@@ -22,7 +22,7 @@ public class AvroExample {
 
    public void serializeGeneric() throws IOException {
       // Create a datum to serialize.
-      Schema schema = Schema.parse(getClass().getResourceAsStream("/Pair.avsc"));
+      Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("/Pair.avsc"));
       GenericRecord datum = new GenericData.Record(schema);
       datum.put("left", new Utf8("dog"));
       datum.put("right", new Utf8("cat"));
@@ -30,7 +30,7 @@ public class AvroExample {
       // Serialize it.
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       DatumWriter<GenericRecord> writer = new GenericDatumWriter<GenericRecord>(schema);
-      Encoder encoder = new BinaryEncoder(out);
+      Encoder encoder = EncoderFactory.get().binaryEncoder(out, null);
       writer.write(datum, encoder);
       encoder.flush();
       out.close();
@@ -52,7 +52,7 @@ public class AvroExample {
       // Serialize it.
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       DatumWriter<Pair> writer = new SpecificDatumWriter<Pair>(Pair.class);
-      Encoder encoder = new BinaryEncoder(out);
+      Encoder encoder = EncoderFactory.get().binaryEncoder(out, null);
       writer.write(datum, encoder);
       encoder.flush();
       out.close();
