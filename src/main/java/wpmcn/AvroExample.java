@@ -38,7 +38,7 @@ public class AvroExample {
 
       // Deserialize it.
       DatumReader<GenericRecord> reader = new GenericDatumReader<GenericRecord>(schema);
-      BinaryDecoder decoder = DecoderFactory.defaultFactory().createBinaryDecoder(out.toByteArray(), null);
+      BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(out.toByteArray(), null);
       GenericRecord result = reader.read(null, decoder);
       System.out.printf("Left: %s, Right: %s\n", result.get("left"), result.get("right"));
    }
@@ -60,7 +60,7 @@ public class AvroExample {
 
       // Deserialize it.
       DatumReader<Pair> reader = new SpecificDatumReader<Pair>(Pair.class);
-      BinaryDecoder decoder = DecoderFactory.defaultFactory().createBinaryDecoder(out.toByteArray(), null);
+      BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(out.toByteArray(), null);
       Pair result = reader.read(null, decoder);
       System.out.printf("Left: %s, Right: %s\n", result.left, result.right);
    }
