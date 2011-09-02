@@ -45,13 +45,13 @@ public class AvroExample {
 
    public void serializeSpecific() throws IOException {
       // Create a datum to serialize.
-      Pair datum = new Pair();
+      MyPair datum = new MyPair();
       datum.left = new Utf8("dog");
       datum.right = new Utf8("cat");
 
       // Serialize it.
       ByteArrayOutputStream out = new ByteArrayOutputStream();
-      DatumWriter<Pair> writer = new SpecificDatumWriter<Pair>(Pair.class);
+      DatumWriter<MyPair> writer = new SpecificDatumWriter<MyPair>(MyPair.class);
       Encoder encoder = EncoderFactory.get().binaryEncoder(out, null);
       writer.write(datum, encoder);
       encoder.flush();
@@ -59,9 +59,9 @@ public class AvroExample {
       System.out.println("Serialization: " + out);
 
       // Deserialize it.
-      DatumReader<Pair> reader = new SpecificDatumReader<Pair>(Pair.class);
+      DatumReader<MyPair> reader = new SpecificDatumReader<MyPair>(MyPair.class);
       BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(out.toByteArray(), null);
-      Pair result = reader.read(null, decoder);
+      MyPair result = reader.read(null, decoder);
       System.out.printf("Left: %s, Right: %s\n", result.left, result.right);
    }
 

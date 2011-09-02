@@ -7,8 +7,8 @@ package wpmcn;
  */
 @SuppressWarnings("all")
 /** A pair of strings */
-public class Pair extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  public static final org.apache.avro.Schema SCHEMA$ = org.apache.avro.Schema.parse("{\"type\":\"record\",\"name\":\"avrotest.Pair\",\"fields\":[{\"name\":\"left\",\"type\":\"string\"},{\"name\":\"right\",\"type\":\"string\"}]}");
+public class MyPair extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
+  public static final org.apache.avro.Schema SCHEMA$ = org.apache.avro.Schema.parse("{\"type\":\"record\",\"name\":\"avrotest.MyPair\",\"fields\":[{\"name\":\"left\",\"type\":\"string\"},{\"name\":\"right\",\"type\":\"string\"}]}");
   public java.lang.CharSequence left;
   public java.lang.CharSequence right;
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
