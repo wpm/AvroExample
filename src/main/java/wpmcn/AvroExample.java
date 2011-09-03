@@ -1,6 +1,5 @@
 package wpmcn;
 
-import avrotest.MyPair;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileWriter;
