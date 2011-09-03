@@ -1,6 +1,10 @@
 package wpmcn;
 
+import avrotest.MyPair;
 import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileReader;
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.file.FileReader;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericDatumWriter;
@@ -11,6 +15,7 @@ import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.util.Utf8;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -22,7 +27,7 @@ public class AvroExample {
 
    public void serializeGeneric() throws IOException {
       // Create a datum to serialize.
-      Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("/Pair.avsc"));
+      Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("/MyPair.avsc"));
       GenericRecord datum = new GenericData.Record(schema);
       datum.put("left", new Utf8("dog"));
       datum.put("right", new Utf8("cat"));
@@ -48,21 +53,22 @@ public class AvroExample {
       MyPair datum = new MyPair();
       datum.left = new Utf8("dog");
       datum.right = new Utf8("cat");
-
+      File tmpFile = File.createTempFile("myPairAvroExample", ".avro");
       // Serialize it.
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      DatumWriter<MyPair> writer = new SpecificDatumWriter<MyPair>(MyPair.class);
-      Encoder encoder = EncoderFactory.get().binaryEncoder(out, null);
-      writer.write(datum, encoder);
-      encoder.flush();
-      out.close();
-      System.out.println("Serialization: " + out);
+      DataFileWriter<MyPair> writer = new DataFileWriter<MyPair>(new SpecificDatumWriter<MyPair>(MyPair.class));
+      writer.create(MyPair.SCHEMA$, tmpFile);
+      writer.append(datum);
+      writer.close();
+
+      System.out.println("Serialization: " + tmpFile);
 
       // Deserialize it.
-      DatumReader<MyPair> reader = new SpecificDatumReader<MyPair>(MyPair.class);
-      BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(out.toByteArray(), null);
-      MyPair result = reader.read(null, decoder);
-      System.out.printf("Left: %s, Right: %s\n", result.left, result.right);
+      FileReader<MyPair> reader = DataFileReader.openReader(tmpFile, new SpecificDatumReader<MyPair>(MyPair.class));
+      while (reader.hasNext()) {
+         MyPair result = reader.next();
+         System.out.printf("Left: %s, Right: %s\n", result.left, result.right);
+      }
+      reader.close();
    }
 
    static public void main(String[] args) throws IOException {

@@ -1,0 +1,9 @@
+# Ignore Maven output
+target
+# Ignore Eclipse configuration
+.classpath
+.project
+.settings
+# Ignore IntelliJ configuration
+.idea
+AvroExample.iml
